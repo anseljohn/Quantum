@@ -5,10 +5,16 @@ import pandas as pd
 import numpy as np
 import random as rand
 
+'''
+Print out a pretty matrix
+'''
 def pp(mat):
     print(pd.DataFrame(mat))
     print()
 
+'''
+Return an empty matrix of specified size
+'''
 def empty_mat(size):
     mat = []
     for y in range(size):
@@ -18,8 +24,11 @@ def empty_mat(size):
         mat.append(row)
     return mat
 
+'''
+Return a random adjacency matrix
+'''
 def gen_mat(size):
-    graph = nx.erdos_renyi_graph(size, .25, seed=123, directed=False)
+    graph = nx.erdos_renyi_graph(size, .25, directed=False)
 
     adj = nx.adjacency_matrix(graph)
     adj = adj.tocoo()
@@ -31,6 +40,9 @@ def gen_mat(size):
 
     return mat
 
+'''
+Get multiple random adjacency matrices
+'''
 def gen_mats(cnt, size=0):
     mats = []
     if (size == 0):
@@ -41,62 +53,73 @@ def gen_mats(cnt, size=0):
             mats.append(gen_mat(size))
     return mats
 
+'''
+Plot multiple adjacency matrices when passed through
+the matrix expontential
+'''
 def plot_expms(mats):
     for mat in mats:
-        plot_expm(mat)
+        plot_expm(expm_entries(mat))
 
-def plot_expm(mat):
+'''
+Create an NxN matrix showing how close values got to one
+'''
+def closest_to_one(mat):
+    closest = [] # NxN matrix with each entry being how close it got to 1
+    for row in mat:
+        clos_row = []
+        for entry in row:
+            min_val = 1-entry[0]
+            for data in entry:
+                if 1-data < min_val:
+                    min_val = 1-data
+            clos_row.append(round(min_val, 3))
+
+        closest.append(clos_row)
+    
+    return closest
+
+def expm_entries(mat):
     np_mat = np.array(mat)
     identity = np.identity(len(np_mat))
 
     time = 0.0
-
     data = []
+
+    # Generate an NxNxtime matrix for recording each entry change
+    # over time
     for i in range(len(mat)):
         row = []
         for j in range(len(mat)):
             row.append([])
         data.append(row)
 
-    times = []
-    while time < 3*np.pi:
-        postop = np.cos(time)*identity + 1j*np.sin(time)*np_mat
+    times = []  # The time vector
+    while time < 3*np.pi: # Record matrix exponential just to 3pi
+        postop = np.cos(time)*identity + 1j*np.sin(time)*np_mat #Calcuate matrix exponential for current time
         for y in range(len(mat)):
             for x in range(len(mat)):
-                data[y][x].append(abs(postop[y][x]))
+                data[y][x].append(abs(postop[y][x])) 
         times.append(time)
         time += 0.01
 
-    entry_num = 0
-    for row in data:
-        for entry in row:
-            pyplot.plot(times, entry, label = str(entry_num))
-            entry_num += 1
+    return [times, data]
 
+'''
+Plot a single matrix exponential over time
+'''
+def plot_expm(coupled):
+    times = coupled[0]
+    data = coupled[1]
+    entry_num = 0
+    for y in range(len(mat)):
+        for x in range(len(mat)):
+            if (x != y):
+                pyplot.plot(times, data[y][x], label=str(entry_num))
+                entry_num += 1
+
+    pyplot.legend(loc='upper right')
     pyplot.show()
 
-if __name__ == '__main__':
-    plot_expm(gen_mat(5))
-
-'''
-test = np.mat('[0 1;1 0]')
-test = np.array([
-        [0, 0, 1],
-        [0, 1, 0],
-        [1, 0, 0]
-])
-testI = np.identity(len(test))
-
-time = 0.0
-
-data = []
-while time < 3*np.pi:
-  postop = np.cos(time)*testI + 1j*np.sin(time)*test
-  data.append([1, abs(postop[0][0])])
-  time += 0.01
-
-df = pd.DataFrame(data, columns = ['One', 'Value'])
-df.plot()
-pyplot.xlim([0, np.pi*4])
-pyplot.show()
-'''
+    pp(mat)
+    pp(closest_to_one(expm_entries(mat)[1]))
