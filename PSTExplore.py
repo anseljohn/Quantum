@@ -31,14 +31,7 @@ def gen_mat(size):
     graph = nx.erdos_renyi_graph(size, .25, directed=False)
 
     adj = nx.adjacency_matrix(graph)
-    adj = adj.tocoo()
-
-    mat = empty_mat(size)
-    
-    for i,j,v in zip(adj.row, adj.col, adj.data):
-        mat[i][j] = 1
-
-    return mat
+    return adj.todense()
 
 '''
 Get multiple random adjacency matrices
@@ -126,9 +119,6 @@ def plot_expm(coupled):
 
     pyplot.legend(loc='upper right')
     pyplot.show()
-
-    pp(mat)
-    pp(closest_to_one(expm_entries(mat)[1]))
 
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
