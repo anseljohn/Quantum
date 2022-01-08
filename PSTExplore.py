@@ -1,4 +1,4 @@
-from scipy.linalg import expm, sinm, cosm
+from scipy.linalg import expm
 from matplotlib import pyplot
 import networkx as nx
 import pandas as pd
