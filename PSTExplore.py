@@ -63,6 +63,7 @@ def plot_expms(mats):
 
 '''
 Create an NxN matrix showing how close values got to one
+i.e. If an entry in the returned matrix is 0, that means it reached 0
 '''
 def closest_to_one(mat):
     closest = [] # NxN matrix with each entry being how close it got to 1
@@ -79,6 +80,11 @@ def closest_to_one(mat):
     
     return closest
 
+'''
+Returns the time vector and...
+the NxN matrix with each entry being a vector containing the entry's matrix
+exponential values over some period of time.
+'''
 def expm_entries(mat):
     np_mat = np.array(mat)
     identity = np.identity(len(np_mat))
@@ -123,3 +129,10 @@ def plot_expm(coupled):
 
     pp(mat)
     pp(closest_to_one(expm_entries(mat)[1]))
+
+if __name__ == '__main__':
+    mat = gen_mat(5)                            # Generate a random matrix
+    series = expm_entries(mat)                  # Get the times and matrix exponentials
+    pp(mat)                                     # Print the adjacency matrix
+    pp(closest_to_one(expm_entries(mat)[1]))    # Show how close each entry got to one
+    plot_expm(series)                           # Plot the exponential values over time
