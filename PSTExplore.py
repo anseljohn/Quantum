@@ -7,18 +7,29 @@ import random as rand
 
 def pp(mat):
     print(pd.DataFrame(mat))
+    print()
+
+def empty_mat(size):
+    mat = []
+    for y in range(size):
+        row = []
+        for x in range(size):
+            row.append(0)
+        mat.append(row)
+    return mat
 
 def gen_mat(size):
-    graph = nx.gnp_random_graph(size, .1)
+    graph = nx.erdos_renyi_graph(size, .25, seed=123, directed=False)
 
     adj = nx.adjacency_matrix(graph)
     adj = adj.tocoo()
+
+    mat = empty_mat(size)
     
-    newadj = [[0]*size]*size
-    pp(newadj)
     for i,j,v in zip(adj.row, adj.col, adj.data):
-        print(i,j,v)
-        print(newadj[j][i])
+        mat[i][j] = 1
+
+    return mat
 
 def gen_mats(cnt, size=0):
     mats = []
@@ -30,7 +41,37 @@ def gen_mats(cnt, size=0):
             mats.append(gen_mat(size))
     return mats
 
-gen_mat(10)
+def plot_expms(mats):
+    for mat in mats:
+        plot_expm(mat)
+
+def plot_expm(mat):
+    np_mat = np.array(mat)
+    identity = np.identity(len(np_mat))
+
+    time = 0.0
+
+    data = []
+    for i in range(len(mat)):
+        row = []
+        for j in range(len(mat)):
+            row.append([])
+        data.append(row)
+
+    while time < 3*np.pi:
+        postop = np.cos(time)*identity + 1j*np.sin(time)*np_mat
+        for y in range(len(mat)):
+            for x in range(len(mat)):
+                data[y][x].append([1, abs(postop[y][x])])
+        time += 0.01
+
+    print(data[0][0])
+    df = pd.DataFrame(data[0][0], columns=['One', 'Value'])
+    df.plot()
+    pyplot.show()
+
+if __name__ == '__main__':
+    plot_expm(gen_mat(5))
 
 '''
 test = np.mat('[0 1;1 0]')
