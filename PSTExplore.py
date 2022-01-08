@@ -9,11 +9,18 @@ def pp(mat):
     print(pd.DataFrame(mat))
 
 def gen_mat(size):
-    graph = nx.gnp_random_graph(size, .2)
+    graph = nx.gnp_random_graph(size, .1)
 
     adj = nx.adjacency_matrix(graph)
-    print(adj.tocoo().data)
-
+    adj = adj.tocoo()
+    
+    newadj = [[0]*size]*size
+    pp(newadj)
+    for i,j,v in zip(adj.row, adj.col,adj.data):
+        print(newadj[j][i])
+        newadj[j][i] = 1
+        print(i,j,v)
+        pp(newadj)
 
 def gen_mats(cnt, size=0):
     mats = []
