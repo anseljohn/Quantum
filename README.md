@@ -1,4 +1,4 @@
-### Welcome to Quantum
+# Welcome to Quantum
 This repo is just for exploring quantum applications for Summer of 2022.
 
 ## PSTExplore
