@@ -20,6 +20,15 @@ def empty_mat(size):
     for y in range(size):
         row = []
         for x in range(size):
+            row.append([])
+        mat.append(row)
+    return mat
+
+def zero_mat(size):
+    mat = []
+    for y in range(size):
+        row = []
+        for x in range(size):
             row.append(0)
         mat.append(row)
     return mat
@@ -67,54 +76,37 @@ def closest_to_one(mat):
             for data in entry:
                 if 1-data < min_val:
                     min_val = 1-data
-            clos_row.append(round(min_val, 3))
+            clos_row.append(min_val)
 
         closest.append(clos_row)
     
     return closest
 
-'''
-Returns the time vector and...
-the NxN matrix with each entry being a vector containing the entry's matrix
-exponential values over some period of time.
-'''
 def expm_entries(mat):
-    np_mat = np.array(mat)
-    identity = np.identity(len(np_mat))
-
     time = 0.0
-    data = []
-
-    # Generate an NxNxtime matrix for recording each entry change
-    # over time
-    for i in range(len(mat)):
-        row = []
-        for j in range(len(mat)):
-            row.append([])
-        data.append(row)
-
-    times = []  # The time vector
-    while time < 3*np.pi: # Record matrix exponential just to 3pi
-        postop = np.cos(time)*identity + 1j*np.sin(time)*np_mat #Calcuate matrix exponential for current time
+    times = []
+    series = empty_mat(len(mat))
+    
+    while time < 3*np.pi:
+        u = np.abs(expm(-1j*mat*time))
         for y in range(len(mat)):
             for x in range(len(mat)):
-                data[y][x].append(abs(postop[y][x])) 
+                series[y][x].append(u[y][x])
+
         times.append(time)
         time += 0.01
 
-    return [times, data]
+    return [times, series]
 
-'''
-Plot a single matrix exponential over time
-'''
 def plot_expm(coupled):
     times = coupled[0]
-    data = coupled[1]
+    series = coupled[1]
+
     entry_num = 0
     for y in range(len(mat)):
         for x in range(len(mat)):
             if (x != y):
-                pyplot.plot(times, data[y][x], label=str(entry_num))
+                pyplot.plot(times, series[y][x], label=str(entry_num))
                 entry_num += 1
 
     pyplot.legend(loc='upper right')
@@ -122,7 +114,7 @@ def plot_expm(coupled):
 
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
-    series = expm_entries(mat)                  # Get the times and matrix exponentials
+    series = expm_entries(mat)
     pp(mat)                                     # Print the adjacency matrix
-    pp(closest_to_one(expm_entries(mat)[1]))    # Show how close each entry got to one
-    plot_expm(series)                           # Plot the exponential values over time
+    pp(closest_to_one(series[1]))    # Show how close each entry got to one
+    plot_expm(mat)                           # Plot the exponential values over time
