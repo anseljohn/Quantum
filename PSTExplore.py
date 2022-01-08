@@ -16,11 +16,9 @@ def gen_mat(size):
     
     newadj = [[0]*size]*size
     pp(newadj)
-    for i,j,v in zip(adj.row, adj.col,adj.data):
-        print(newadj[j][i])
-        newadj[j][i] = 1
+    for i,j,v in zip(adj.row, adj.col, adj.data):
         print(i,j,v)
-        pp(newadj)
+        print(newadj[j][i])
 
 def gen_mats(cnt, size=0):
     mats = []
