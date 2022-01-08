@@ -1,8 +1,32 @@
 from scipy.linalg import expm, sinm, cosm
 from matplotlib import pyplot
+import networkx as nx
 import pandas as pd
 import numpy as np
+import random as rand
 
+def pp(mat):
+    print(pd.DataFrame(mat))
+
+def gen_mat(size):
+    mat = [[0]*size]*size
+
+
+    return mat
+
+def gen_mats(cnt, size=0):
+    mats = []
+    if (size == 0):
+        for i in range(cnt):
+            mats.append(gen_mat(rand.randint(2, 10)))
+    else:
+        for i in range(cnt):
+            mats.append(gen_mat(size))
+    return mats
+
+pp(gen_mat(10))
+
+'''
 test = np.mat('[0 1;1 0]')
 test = np.array([
         [0, 0, 1],
@@ -23,4 +47,4 @@ df = pd.DataFrame(data, columns = ['One', 'Value'])
 df.plot()
 pyplot.xlim([0, np.pi*4])
 pyplot.show()
-
+'''
