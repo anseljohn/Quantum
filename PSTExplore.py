@@ -58,16 +58,21 @@ def plot_expm(mat):
             row.append([])
         data.append(row)
 
+    times = []
     while time < 3*np.pi:
         postop = np.cos(time)*identity + 1j*np.sin(time)*np_mat
         for y in range(len(mat)):
             for x in range(len(mat)):
-                data[y][x].append([1, abs(postop[y][x])])
+                data[y][x].append(abs(postop[y][x]))
+        times.append(time)
         time += 0.01
 
-    print(data[0][0])
-    df = pd.DataFrame(data[0][0], columns=['One', 'Value'])
-    df.plot()
+    entry_num = 0
+    for row in data:
+        for entry in row:
+            pyplot.plot(times, entry, label = str(entry_num))
+            entry_num += 1
+
     pyplot.show()
 
 if __name__ == '__main__':
