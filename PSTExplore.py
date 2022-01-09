@@ -37,7 +37,7 @@ def zero_mat(size):
 Return a random adjacency matrix
 '''
 def gen_mat(size):
-    graph = nx.erdos_renyi_graph(size, .25, directed=False)
+    graph = nx.erdos_renyi_graph(size, .25, directed=True)
 
     adj = nx.adjacency_matrix(graph)
     return adj.todense()
@@ -98,7 +98,7 @@ def expm_entries(mat):
 
     return [times, series]
 
-def plot_expm(coupled):
+def plot_expm(coupled, legend):
     times = coupled[0]
     series = coupled[1]
 
@@ -108,13 +108,14 @@ def plot_expm(coupled):
             if (x != y):
                 pyplot.plot(times, series[y][x], label=str(entry_num))
                 entry_num += 1
-
-    pyplot.legend(loc='upper right')
+    if legend:
+        pyplot.legend(loc='upper left')
     pyplot.show()
 
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
-    series = expm_entries(mat)
+    #mat = [[0, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]]
     pp(mat)                                     # Print the adjacency matrix
-    pp(closest_to_one(series[1]))    # Show how close each entry got to one
-    plot_expm(mat)                           # Plot the exponential values over time
+    series = expm_entries(mat)                  # Generate the expm series
+    pp(closest_to_one(series[1]))               # Show how close each entry got to one
+    plot_expm(series, True)                     # Plot the exponential values over time
