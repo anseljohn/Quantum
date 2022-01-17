@@ -33,6 +33,15 @@ def zero_mat(size):
         mat.append(row)
     return mat
 
+def opt(k=1, n=5, r=1):
+    nodes = [0]*n
+    nodes[rand.choice(range(n))] = 1
+    adj = zero_mat(n)
+    for i in range(n-k):
+        if rand.random() <= r:
+            print("Add node connection with probability r")
+
+
 '''
 Return a random adjacency matrix
 '''
@@ -114,8 +123,7 @@ def plot_expm(coupled, legend):
 
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
-    mat = np.matrix([[0, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]])
-    mat = np.matrix([[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,1],[0,1,0,0,0],[0,1,1,0,0]])
+    mat = np.matrix([[0,1,1],[1,0,1],[1,1,0]])
     print(eig(mat))
     pp(mat)                                     # Print the adjacency matrix
     series = expm_entries(mat)                  # Generate the expm series
