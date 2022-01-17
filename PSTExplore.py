@@ -1,4 +1,4 @@
-from scipy.linalg import expm
+from scipy.linalg import expm, eig
 from matplotlib import pyplot
 import networkx as nx
 import pandas as pd
@@ -114,7 +114,9 @@ def plot_expm(coupled, legend):
 
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
-    #mat = [[0, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]]
+    mat = np.matrix([[0, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0], [1, 0, 0, 0]])
+    mat = np.matrix([[0,0,0,0,0],[0,0,0,0,0],[0,0,0,1,1],[0,1,0,0,0],[0,1,1,0,0]])
+    print(eig(mat))
     pp(mat)                                     # Print the adjacency matrix
     series = expm_entries(mat)                  # Generate the expm series
     pp(closest_to_one(series[1]))               # Show how close each entry got to one
