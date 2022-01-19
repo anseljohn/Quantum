@@ -46,9 +46,14 @@ def optimal(k=1, n=5, r=1):
     pp(adj)
 
     for i in range(k-1, n-1):
-        if rand.random() <= r:
-            chosen_node = rand.choice(0, k)
+        added = False
+        chosen_node = rand.choice(0, k)
+        if rand.random() <= 1-r:
             print("Add node connection with probability " + str(r))
+            
+        if rand.random() <= r:
+            print("Add node connection with probability " + str(r))
+
 
 
 '''
