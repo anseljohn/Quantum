@@ -33,13 +33,22 @@ def zero_mat(size):
         mat.append(row)
     return mat
 
-def opt(k=1, n=5, r=1):
+def optimal(k=1, n=5, r=1):
     nodes = [0]*n
     nodes[rand.choice(range(n))] = 1
     adj = zero_mat(n)
-    for i in range(n-k):
+
+    for i in range(k):
+        for j in range(k):
+            if i != j:
+                adj[i][j] = 1
+
+    pp(adj)
+
+    for i in range(k-1, n-1):
         if rand.random() <= r:
-            print("Add node connection with probability r")
+            chosen_node = rand.choice(0, k)
+            print("Add node connection with probability " + str(r))
 
 
 '''
@@ -129,3 +138,4 @@ if __name__ == '__main__':
     series = expm_entries(mat)                  # Generate the expm series
     pp(closest_to_one(series[1]))               # Show how close each entry got to one
     plot_expm(series, True)                     # Plot the exponential values over time
+    optimal(k=3)
