@@ -50,8 +50,19 @@ def optimal(k=1, n=5, r=1):
         chosen_node = rand.choice(range(0, k))
         if rand.random() <= 1-r:
             adj[chosen_node][i] = 1
-        elif rand.random() <= r:
-            print("Add node connection with probability " + str(r))
+            added = True
+        else:
+            to_remove = [chosen_node]
+            while not added:
+                chosen_node = rand.choice(node for node in range(0,k) if node not in to_remove)
+                if rand.random() <= r:
+                    adj[chosen_node][i] = 1
+                    added = True
+                else:
+                    to_remove.append(chosen_node)
+
+                
+
 
 
 
