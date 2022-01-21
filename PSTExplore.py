@@ -47,11 +47,10 @@ def optimal(k=1, n=5, r=1):
 
     for i in range(k-1, n-1):
         added = False
-        chosen_node = rand.choice(0, k)
+        chosen_node = rand.choice(range(0, k))
         if rand.random() <= 1-r:
-            print("Add node connection with probability " + str(r))
-            
-        if rand.random() <= r:
+            adj[chosen_node][i] = 1
+        elif rand.random() <= r:
             print("Add node connection with probability " + str(r))
 
 
