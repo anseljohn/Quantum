@@ -33,7 +33,7 @@ def zero_mat(size):
         mat.append(row)
     return mat
 
-def optimal(k=1, n=5, r=1):
+def optimal(k=2, n=5, r=1):
     nodes = [0]*n
     nodes[rand.choice(range(n))] = 1
     adj = zero_mat(n)
@@ -43,9 +43,8 @@ def optimal(k=1, n=5, r=1):
             if i != j:
                 adj[i][j] = 1
 
-    pp(adj)
 
-    for i in range(k-1, n-1):
+    for i in range(k-1, n):
         added = False
         chosen_node = rand.choice(range(0, k))
         if rand.random() <= 1-r:
@@ -54,13 +53,13 @@ def optimal(k=1, n=5, r=1):
         else:
             to_remove = [chosen_node]
             while not added:
-                chosen_node = rand.choice(node for node in range(0,k) if node not in to_remove)
+                chosen_node = rand.choice([node for node in range(0,k) if node not in to_remove])
                 if rand.random() <= r:
                     adj[chosen_node][i] = 1
                     added = True
                 else:
                     to_remove.append(chosen_node)
-
+    return adj
                 
 
 
@@ -74,6 +73,13 @@ def gen_mat(size):
 
     adj = nx.adjacency_matrix(graph)
     return adj.todense()
+
+def draw_graph(adj):
+    newadj = np.array(adj)
+    graph = nx.from_numpy_matrix(newadj)
+    nx.draw(graph)
+    pyplot.show()
+
 
 '''
 Get multiple random adjacency matrices
@@ -92,7 +98,7 @@ def gen_mats(cnt, size=0):
 Plot multiple adjacency matrices when passed through
 the matrix expontential
 '''
-def plot_expms(mats):
+def draw_expms(mats):
     for mat in mats:
         plot_expm(expm_entries(mat))
 
@@ -148,9 +154,9 @@ def plot_expm(coupled, legend):
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
     mat = np.matrix([[0,1,1],[1,0,1],[1,1,0]])
-    print(eig(mat))
-    pp(mat)                                     # Print the adjacency matrix
-    series = expm_entries(mat)                  # Generate the expm series
-    pp(closest_to_one(series[1]))               # Show how close each entry got to one
-    plot_expm(series, True)                     # Plot the exponential values over time
-    optimal(k=3)
+    #print(eig(mat))
+    #pp(mat)                                     # Print the adjacency matrix
+    #series = expm_entries(mat)                  # Generate the expm series
+    #pp(closest_to_one(series[1]))               # Show how close each entry got to one
+    #plot_expm(series, True)                     # Plot the exponential values over time
+    draw_graph(optimal(n=5))
