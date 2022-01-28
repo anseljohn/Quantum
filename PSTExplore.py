@@ -54,11 +54,16 @@ def optimal(k=2, n=5, r=1):
             to_remove = [chosen_node]
             while not added:
                 chosen_node = rand.choice([node for node in range(0,k) if node not in to_remove])
+                print("****" + str(chosen_node) + "****")
                 if rand.random() <= r:
+                    print("*****")
                     adj[chosen_node][i] = 1
                     added = True
                 else:
                     to_remove.append(chosen_node)
+            print(to_remove)
+            print(adj)
+        print(i)
     return adj
                 
 
@@ -159,4 +164,4 @@ if __name__ == '__main__':
     #series = expm_entries(mat)                  # Generate the expm series
     #pp(closest_to_one(series[1]))               # Show how close each entry got to one
     #plot_expm(series, True)                     # Plot the exponential values over time
-    draw_graph(optimal(n=5))
+    draw_graph(optimal(n=5, r=0.5))
