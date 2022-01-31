@@ -33,6 +33,15 @@ def zero_mat(size):
         mat.append(row)
     return mat
 
+def exclude(ret, excl):
+    new_arr = []
+
+    for i in ret:
+        if i not in excl:
+            new_arr.append(i)
+
+    return new_arr
+
 def optimal(k=2, n=5, r=1):
     nodes = [0]*n
     nodes[rand.choice(range(n))] = 1
@@ -53,7 +62,8 @@ def optimal(k=2, n=5, r=1):
         else:
             to_remove = [chosen_node]
             while not added:
-                chosen_node = rand.choice([node for node in range(0,k) if node not in to_remove])
+                chosen_node = rand.choice()
+                chosen_node = exclude(range(k), to_remove)[rand.randint(0, k - len(to_remove) - 1)]
                 print("****" + str(chosen_node) + "****")
                 if rand.random() <= r:
                     print("*****")
