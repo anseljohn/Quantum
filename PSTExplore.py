@@ -166,6 +166,13 @@ def plot_expm(coupled, legend):
         pyplot.legend(loc='upper left')
     pyplot.show()
 
+def n_node_optimal(n, k):
+    num_edges = k * (n-1)
+
+
+def five_node_optimal(k):
+    num_edges = k * (5-1)
+
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
     mat = np.matrix([[0,1,1],[1,0,1],[1,1,0]])
