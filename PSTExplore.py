@@ -1,4 +1,5 @@
 from scipy.linalg import expm, eig
+from scipy.sparse.csgraph import laplacian
 from matplotlib import pyplot
 import networkx as nx
 import pandas as pd
@@ -168,17 +169,18 @@ def plot_expm(coupled, legend):
 
 def n_node_optimal(n, k):
     num_edges = k * (n-1)
-
+    
 
 def five_node_optimal(k):
-    num_edges = k * (5-1)
+    n_node_optimal(5, k)
 
 if __name__ == '__main__':
     mat = gen_mat(5)                            # Generate a random matrix
     mat = np.matrix([[0,1,1],[1,0,1],[1,1,0]])
-    #print(eig(mat))
-    #pp(mat)                                     # Print the adjacency matrix
-    #series = expm_entries(mat)                  # Generate the expm series
-    #pp(closest_to_one(series[1]))               # Show how close each entry got to one
-    #plot_expm(series, True)                     # Plot the exponential values over time
-    draw_graph(optimal(n=5, r=0.5))
+    mat = np.matrix([[0,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]])
+    print(eig(mat))
+    pp(mat)                                     # Print the adjacency matrix
+    series = expm_entries(mat)                  # Generate the expm series
+    pp(closest_to_one(series[1]))               # Show how close each entry got to one
+    plot_expm(series, True)                     # Plot the exponential values over time
+    draw_graph(mat)
