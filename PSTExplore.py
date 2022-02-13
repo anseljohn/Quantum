@@ -34,6 +34,9 @@ def zero_mat(size):
         mat.append(row)
     return mat
 
+'''
+Excludes values from excl
+'''
 def exclude(ret, excl):
     new_arr = []
 
@@ -43,6 +46,9 @@ def exclude(ret, excl):
 
     return new_arr
 
+'''
+Optimal network generation
+'''
 def optimal(k=2, n=5, r=1):
     nodes = [0]*n
     nodes[rand.choice(range(n))] = 1
@@ -137,6 +143,9 @@ def closest_to_one(mat):
     
     return closest
 
+'''
+Creates a matrix with matrix exponential values over the time 0-3pi
+'''
 def expm_entries(mat):
     time = 0.0
     times = []
@@ -153,7 +162,10 @@ def expm_entries(mat):
 
     return [times, series]
 
-def plot_expm(coupled, legend):
+'''
+Plots a matrix exponential matrix over time
+'''
+def plot_expm(coupled, legend, title=""):
     times = coupled[0]
     series = coupled[1]
 
@@ -165,8 +177,12 @@ def plot_expm(coupled, legend):
                 entry_num += 1
     if legend:
         pyplot.legend(loc='upper left')
+    pyplot.title(title)
     pyplot.show()
 
+'''
+Automating optimal network creation
+'''
 def n_node_optimal(n, k):
     num_edges = k * (n-1)
     
@@ -175,12 +191,33 @@ def five_node_optimal(k):
     n_node_optimal(5, k)
 
 if __name__ == '__main__':
-    mat = gen_mat(5)                            # Generate a random matrix
-    mat = np.matrix([[0,1,1],[1,0,1],[1,1,0]])
-    mat = np.matrix([[0,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]])
-    print(eig(mat))
+    mat = np.matrix([[0,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0],[1,0,0,0,0]]) # 5 node, directed, optimal graph
+    mat = np.matrix([
+            [0, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0],
+            [1, 0, 0, 0, 0],
+            [0, 1, 0, 0, 0],
+        ])
+    laplace = laplacian(mat, normed=False) # generate the laplacian
+
+    print("***************** Adjacency Matrix *******************")
     pp(mat)                                     # Print the adjacency matrix
-    series = expm_entries(mat)                  # Generate the expm series
+    print("\n***************** Laplacian Matrix *******************")
+    pp(laplace)
+    print("\n***************** Laplacian Eigenvalues *******************")
+    print(eig(laplace))  # checking reality
+    print("\n***************** Adjacency Eigenvalues *******************")
+    print(eig(mat))
+
+    series = expm_entries(laplace)                  # Generate the expm series
+    print("\n***************** How close each entry got to 1 *******************")
     pp(closest_to_one(series[1]))               # Show how close each entry got to one
-    plot_expm(series, True)                     # Plot the exponential values over time
+    plot_expm(series, True, title="Laplacian Matrix Exponential")                     # Plot the exponential values over time
+
+    series = expm_entries(mat)
+    print("\n***************** How close each entry got to 1 *******************")
+    pp(closest_to_one(series[1]))               # Show how close each entry got to one
+    plot_expm(series, True, title="Adjacency Matrix Exponential")                     # Plot the exponential values over time
+
     draw_graph(mat)
